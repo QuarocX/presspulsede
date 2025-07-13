@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Latest News Entries</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9; /* Light background for a modern feel */
+            color: #333; /* Dark text for contrast */
+        }
+        h1 {
+            color: #333;
+            text-align: center; /* Centered title */
+        }
+        nav {
+            margin: 20px 0; /* Spacing around navigation */
+            text-align: center; /* Center navigation items */
+        }
+        .tab {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 0 5px;
+            background-color: #007BFF; /* Bootstrap primary color */
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .tab:hover {
+            background-color: #0056b3; /* Darker shade on hover */
+        }
+        .tab-content {
+            display: none; /* Hide tab content by default */
+            margin-top: 20px;
+            opacity: 0; /* Start with invisible content */
+            transition: opacity 0.3s ease; /* Smooth transition for opacity */
+        }
+        .active {
+            display: block; /* Show active tab content */
+            opacity: 1; /* Make it visible */
+        }
+        .entry {
+            background-color: #fff; /* White background for entries */
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+            margin-bottom: 20px;
+        }
+        .source {
+            font-weight: bold;
+            color: #007BFF; /* Bootstrap primary color for emphasis */
+        }
+    </style>
+</head>
+<body>
+    <h1>Latest News Entries</h1>
+
+    <nav>
+        <div class="tab" onclick="showTab('sentiment')">Sentiment Analysis</div>
+        <div class="tab" onclick="showTab('political')">Political Analysis</div>
+        <div class="tab" onclick="window.location.href='/data-analysis/data-analysis.html'">Newspaper Data Analysis</div> <!-- New navigation element -->
+    </nav>
+
+    <div id="sentiment" class="tab-content active">
+        <h2>Sentiment Analysis for Newspapers:</h2>
+        <ul>
+            <li><a href='sentiment-analysis-taz.html'>taz</a></li>
+            <li><a href='sentiment-analysis-spiegel.html'>Spiegel</a></li>
+            <li><a href='sentiment-analysis-zeit.html'>Zeit</a></li>
+            <li><a href='sentiment-analysis-faz.html'>FAZ</a></li>
+            <li><a href='sentiment-analysis-sueddeutsche.html'>Süddeutsche</a></li>
+        </ul>
+    </div>
+
+    <div id="political" class="tab-content">
+        <h2>Political Analysis for Newspapers:</h2>
+        <ul>
+            <li><a href='political-analysis-taz.html'>taz</a></li>
+            <li><a href='political-analysis-spiegel.html'>Spiegel</a></li>
+            <li><a href='political-analysis-zeit.html'>Zeit</a></li>
+            <li><a href='political-analysis-faz.html'>FAZ</a></li>
+            <li><a href='political-analysis-sueddeutsche.html'>Süddeutsche</a></li>
+        </ul>
+    </div>
+
+    <div id="latest-entries"></div>
+
+    <script>
+        // Function to show the selected tab
+        function showTab(tabName) {
+            const tabs = document.querySelectorAll('.tab-content');
+            
+            // Hide all tabs
+            tabs.forEach(tab => {
+                tab.classList.remove('active'); // Remove active class
+                tab.style.display = 'none'; // Set display to none immediately
+                tab.style.opacity = '0'; // Reset opacity to zero
+            });
+
+            // Show the selected tab
+            const activeTab = document.getElementById(tabName);
+            activeTab.style.display = 'block'; // Make it block to allow fading in
+          
+          // Use requestAnimationFrame to ensure the browser has time to render before changing opacity
+          requestAnimationFrame(() => {
+              activeTab.style.opacity = '1'; // Fade in the active tab
+              activeTab.classList.add('active'); // Add active class to show it
+          });
+        }
+
+        // Fetch latest entries from JSON files
+        const files = ['taz.json', 'faz.json', 'spiegel.json', 'sueddeutsche.json', 'zeit.json'];
+        const latestEntriesContainer = document.getElementById('latest-entries');
+
+        files.forEach(file => {
+            fetch(file)
+                .then(response => response.json())
+                .then(data => {
+                    const latestEntry = data[data.length - 1]; // Assuming the last entry is the latest
+                    
+                    // Determine the link prefix based on the source file
+                    let linkPrefix = '';
+                    if (file === 'taz.json') {
+                        linkPrefix = 'https://taz.de';
+                    }
+
+                    const entryHtml = `
+                        <div class="entry">
+                            <div class="source">Source: ${file}</div>
+                            <h2>${latestEntry.headline}</h2>
+                            <p><strong>${latestEntry.subtext}</strong></p>
+                            <p>${latestEntry.teaser}</p>
+                            <p>Category: ${latestEntry.category}</p>
+                            <p>Date: ${latestEntry.date_time} (${latestEntry.weekday})</p>
+                            <p><a href="${linkPrefix}${latestEntry.link}" target="_blank">Read more</a></p> <!-- Conditional link -->
+                        </div>
+                    `;
+                    latestEntriesContainer.innerHTML += entryHtml; // Append the entry to the container
+                })
+                .catch(error => {
+                    console.error('Error fetching data from ' + file + ':', error);
+                    latestEntriesContainer.innerHTML += `<div class="entry">Error loading data from ${file}</div>`;
+                });
+        });
+
+        // Show the sentiment tab by default
+        showTab('sentiment');
+    </script>
+</body>
+</html>

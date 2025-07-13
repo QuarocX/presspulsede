@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Political Tendency Analysis Spiegel</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        h1 {
+            color: #2c3e50;
+        }
+        .loader {
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            display: none; /* Hidden by default */
+        }
+        .loader .newspaper {
+            width: 100px;
+            animation: bounce 1s infinite alternate;
+        }
+        .loader .text {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 10px;
+            color: #3498db;
+            animation: fadeInOut 1.5s infinite alternate;
+        }
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-20px); }
+        }
+        @keyframes fadeInOut {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .content {
+            display: none; /* Hide content until loaded */
+        }
+        .subtopic {
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .sentiment {
+            font-weight: bold;
+        }
+        .comments {
+            margin-top: 10px;
+        }
+        ul {
+            padding-left: 20px; /* Indent list items */
+        }
+    </style>
+</head>
+<body>
+
+<div class="loader" id="loader">
+    <img src="analyse-gif.webp" class="newspaper" alt="Loading Newspaper">
+    <div class="text">Analyzing Political tendency Spiegel...</div>
+</div>
+
+<div class="content" id="content"></div>
+
+<script>
+    function showLoader() {
+        document.getElementById('loader').style.display = 'block';
+    }
+
+    function hideLoader() {
+        document.getElementById('loader').style.display = 'none';
+    }
+
+    function fetchData() {
+        showLoader();
+        
+        var xhr = new XMLHttpRequest();
+        var newspaper = 'spiegel';
+        xhr.open('GET', 'process_script_political.php?param=' + encodeURIComponent(newspaper), true);
+        
+        xhr.onload = function () {
+            hideLoader();
+            if (xhr.status === 200) {
+                document.getElementById('content').innerHTML = xhr.responseText;
+                document.getElementById('content').style.display = 'block';
+            } else {
+                document.getElementById('content').innerHTML = '<p>Error loading data.</p>';
+                document.getElementById('content').style.display = 'block';
+            }
+        };
+        
+        xhr.send();
+    }
+
+    window.onload = fetchData;
+</script>
+
+</body>
+</html>
