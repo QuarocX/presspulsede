@@ -21,3 +21,5 @@ This programme is doing *Newspaper Scraper and Analysis* and scrapes the latest 
 
 ![Political Analysis](other/political-tendency.png)  
 *Example of the LLM-powered political tendency analysis including reasoning*
+
+**Note: This project is currently under development. A license has not yet been chosen.**
