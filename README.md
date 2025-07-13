@@ -1,6 +1,6 @@
-# Newspaper Scraper and Analysis 📰📊
+# PressPulseDE 📰📊
 
-This program scrapes the latest headlines from major German newspapers. It compares the newspapers based on their content and categories, providing numerical insights and advanced sentiment analysis. 
+This programme is doing *Newspaper Scraper and Analysis* and scrapes the latest headlines from major German newspapers. It compares the newspapers based on their content and categories, providing numerical insights and advanced sentiment analysis. 
 
 ## Features ✨
 
